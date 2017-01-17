@@ -123,6 +123,11 @@ make_response({ok, StatusCode, Headers, Body, Cowboy_req},
 
 set_headers(Headers, Cowboy_req) ->
   lists:foldl(fun({Name, Value}, R) -> 
-                  cowboy_req:set_resp_header(Name, Value, R)
+                  cowboy_req:set_resp_header(to_binary(Name), Value, R)
               end,
               Cowboy_req, Headers).
+
+to_binary(N) when is_binary(N) ->
+  N;
+to_binary(N) when is_list(N) ->
+  erlang:list_to_binary(N).
