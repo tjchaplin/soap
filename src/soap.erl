@@ -465,8 +465,13 @@ select_option(Values, Prompt) ->
     ValidInput = [{integer_to_list(Nr), Name} || {Nr, Name } <- Options],
     get_input(ValidInput).
 
+parse_input(Value) when is_binary(Value) ->
+    binary_to_list(Value);
+parse_input(Value) ->
+    Value.
+
 get_input(ValidInput) ->
-    Nr = io:get_line("Select a number: "),
+    Nr = parse_input(io:get_line("Select a number: ")),
     Number = string:left(Nr, length(Nr) - 1),
     case lists:keyfind(Number, 1, ValidInput) of
         false -> get_input(ValidInput);
